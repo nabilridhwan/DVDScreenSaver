@@ -2,17 +2,8 @@
 //  bouncesaverView.m
 //  bouncesaver
 //
-//  Created by Brian Tracy on 5/13/18.
-//  Copyright © 2018 Brian Tracy. All rights reserved.
-//
 
 #import "bouncesaverView.h"
-#define WIDTH ([NSScreen mainScreen].frame.size.width)
-#define HEIGHT ([NSScreen mainScreen].frame.size.height)
-
-// d = r * t
-// r = d / t
-// r = width / 10 seconds. 
 
 @implementation bouncesaverView
 
@@ -20,27 +11,32 @@
 {
     self = [super initWithFrame:frame isPreview:isPreview];
     if (self) {
-        
-        const float fps = 30.0f;
-        [self setAnimationTimeInterval:1/fps];
+        const CGFloat fps = 60.0;
+        [self setAnimationTimeInterval:1.0 / fps];
 
-        
-        const int speed = WIDTH / (10.0 * fps); // adjust to any resolution.
-        // makes the logo travel across the screen in 10 seconds.
-       
-        self.dvdWidth = 512;
-        self.dvdHeight = 256;
-        self.x = WIDTH / 2.0 - self.dvdWidth / 2.0;
-        self.y = HEIGHT / 2.0 - self.dvdHeight / 2.0;
+        // Scale speed to current view width so traversal time feels consistent.
+        CGFloat viewWidth = NSWidth(frame);
+        if (viewWidth <= 0) {
+            viewWidth = 1920.0; // safe fallback
+        }
+        const CGFloat speed = viewWidth / (10.0 * fps);
+
+        self.dvdWidth = 512.0 / 2.0;
+        self.dvdHeight = 256.0 / 2.0;
+
+        CGFloat maxX = MAX(0.0, NSWidth(frame) - self.dvdWidth);
+        CGFloat maxY = MAX(0.0, NSHeight(frame) - self.dvdHeight);
+
+        self.x = maxX / 2.0;
+        self.y = maxY / 2.0;
         self.dirtyRect = NSMakeRect(self.x, self.y, self.dvdWidth, self.dvdHeight);
-        self.xSpeed = speed * (arc4random() % 2 == 0 ? 1 : -1);
-        self.ySpeed = speed * (arc4random() % 2 == 0 ? 1 : -1);
-        //self.dvdLogo = [[NSImage alloc] initWithContentsOfFile:@"/Users/briantracy/Desktop/Projects/bouncesaver/dvdlogo.png"];
-        
-        NSString * dvdPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"dvdvideologo" ofType:@"png"];
-        
-        
+
+        self.xSpeed = speed * ((arc4random() % 2 == 0) ? 1.0 : -1.0);
+        self.ySpeed = speed * ((arc4random() % 2 == 0) ? 1.0 : -1.0);
+
+        NSString *dvdPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"dvdvideologo" ofType:@"png"];
         self.dvdLogo = [[NSImage alloc] initWithContentsOfFile:dvdPath];
+
         [self hitWall];
     }
     return self;
@@ -56,79 +52,75 @@
     [super stopAnimation];
 }
 
-
-
 - (void)drawRect:(NSRect)rectParam
 {
-    
-    // Make black color
-    const float g = 0.0f/255.0f;
-    [[NSColor colorWithRed:g green:g blue:g alpha:1.0f] setFill];
+    [[NSColor blackColor] setFill];
     NSRectFill(rectParam);
-    NSRect rect;
 
-    rect.size = NSMakeSize(self.dvdWidth, self.dvdHeight);
-    
-    self.x += self.xSpeed;
-    self.y += self.ySpeed;
-    rect.origin = CGPointMake(self.x, self.y);
-    self.dirtyRect = rect;
-    
-    [self.dvdLogo drawInRect:rect];
-    
-    CGPoint center = CGPointMake(CGRectGetMidX(rect), CGRectGetMidY(rect));
-    
-    if (center.x + self.dvdWidth / 2 >= WIDTH || center.x - self.dvdWidth / 2 <= 0) {
-        self.xSpeed *= -1;
-        [self hitWall];
-    }
-    
-    if (center.y + self.dvdHeight / 2 >= HEIGHT || center.y - self.dvdHeight / 2 <= 0) {
-        self.ySpeed *= -1;
-        [self hitWall];
-    }
-
-}
-
-- (void)hitWall
-{
-    
-    
-    NSArray * colors = @[[NSColor redColor],
-                         [NSColor blueColor],
-                         [NSColor yellowColor],
-                         [NSColor cyanColor],
-                         [NSColor orangeColor],
-                         [NSColor magentaColor],
-                         [NSColor greenColor]
-                         ];
-    
-    self.dvdColor = colors[arc4random() % [colors count]];
-    
-    [self.dvdLogo lockFocus];
-    [self.dvdColor set];
-    NSRect imageRect = {NSZeroPoint, [self.dvdLogo size]};
-    NSRectFillUsingOperation(imageRect, NSCompositingOperationSourceAtop);
-    [self.dvdLogo unlockFocus];
+    NSRect logoRect = NSMakeRect(self.x, self.y, self.dvdWidth, self.dvdHeight);
+    [self.dvdLogo drawInRect:logoRect];
 }
 
 - (void)animateOneFrame
 {
-    //[self setNeedsDisplay:true];
+    NSRect oldRect = NSMakeRect(self.x, self.y, self.dvdWidth, self.dvdHeight);
+
+    self.x += self.xSpeed;
+    self.y += self.ySpeed;
+
+    CGFloat maxX = NSWidth(self.bounds) - self.dvdWidth;
+    CGFloat maxY = NSHeight(self.bounds) - self.dvdHeight;
+
+    BOOL hit = NO;
+
+    if (self.x <= 0.0) {
+        self.x = 0.0;
+        self.xSpeed = fabs(self.xSpeed);
+        hit = YES;
+    } else if (self.x >= maxX) {
+        self.x = maxX;
+        self.xSpeed = -fabs(self.xSpeed);
+        hit = YES;
+    }
+
+    if (self.y <= 0.0) {
+        self.y = 0.0;
+        self.ySpeed = fabs(self.ySpeed);
+        hit = YES;
+    } else if (self.y >= maxY) {
+        self.y = maxY;
+        self.ySpeed = -fabs(self.ySpeed);
+        hit = YES;
+    }
+
+    if (hit) {
+        [self hitWall];
+    }
+
+    NSRect newRect = NSMakeRect(self.x, self.y, self.dvdWidth, self.dvdHeight);
+    self.dirtyRect = NSUnionRect(oldRect, newRect);
     [self setNeedsDisplayInRect:self.dirtyRect];
-    return;
 }
 
-
-
-- (BOOL)hasConfigureSheet
+- (void)hitWall
 {
-    return NO;
-}
+    NSArray *colors = @[
+        [NSColor redColor],
+        [NSColor blueColor],
+        [NSColor yellowColor],
+        [NSColor cyanColor],
+        [NSColor orangeColor],
+        [NSColor magentaColor],
+        [NSColor greenColor]
+    ];
 
-- (NSWindow*)configureSheet
-{
-    return nil;
+    self.dvdColor = colors[arc4random() % [colors count]];
+
+    [self.dvdLogo lockFocus];
+    [self.dvdColor set];
+    NSRect imageRect = { NSZeroPoint, [self.dvdLogo size] };
+    NSRectFillUsingOperation(imageRect, NSCompositingOperationSourceAtop);
+    [self.dvdLogo unlockFocus];
 }
 
 @end

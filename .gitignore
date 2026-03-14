@@ -1,0 +1,34 @@
+# macOS
+.DS_Store
+
+# Xcode user-specific data
+*.xcuserdatad
+*.xcuserstate
+
+# Xcode DerivedData and build outputs
+DerivedData/
+build/
+Build/
+*.ipa
+*.dSYM
+*.dSYM.zip
+
+# SwiftPM
+.swiftpm/
+.build/
+
+# CocoaPods (if used)
+Pods/
+Podfile.lock
+
+# Carthage (if used)
+Carthage/Build/
+
+# Fastlane (if used)
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots
+fastlane/test_output
+
+# SPM resolved file (optional: keep if you want deterministic deps)
+# Package.resolved

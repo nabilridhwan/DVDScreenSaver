@@ -37,7 +37,7 @@
         self.ySpeed = speed * (arc4random() % 2 == 0 ? 1 : -1);
         //self.dvdLogo = [[NSImage alloc] initWithContentsOfFile:@"/Users/briantracy/Desktop/Projects/bouncesaver/dvdlogo.png"];
         
-        NSString * dvdPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"dvdlogo" ofType:@"png"];
+        NSString * dvdPath = [[NSBundle bundleForClass:[self class]] pathForResource:@"dvdvideologo" ofType:@"png"];
         
         
         self.dvdLogo = [[NSImage alloc] initWithContentsOfFile:dvdPath];
@@ -60,13 +60,13 @@
 
 - (void)drawRect:(NSRect)rectParam
 {
-    const float g = 32.0f/255.0f;
+    
+    // Make black color
+    const float g = 0.0f/255.0f;
     [[NSColor colorWithRed:g green:g blue:g alpha:1.0f] setFill];
     NSRectFill(rectParam);
     NSRect rect;
 
-    
-    
     rect.size = NSMakeSize(self.dvdWidth, self.dvdHeight);
     
     self.x += self.xSpeed;
@@ -74,17 +74,9 @@
     rect.origin = CGPointMake(self.x, self.y);
     self.dirtyRect = rect;
     
-    
-    
-
-
-    
-    
     [self.dvdLogo drawInRect:rect];
     
     CGPoint center = CGPointMake(CGRectGetMidX(rect), CGRectGetMidY(rect));
-    
-    
     
     if (center.x + self.dvdWidth / 2 >= WIDTH || center.x - self.dvdWidth / 2 <= 0) {
         self.xSpeed *= -1;

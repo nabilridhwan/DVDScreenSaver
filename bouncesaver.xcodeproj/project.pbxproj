@@ -9,8 +9,8 @@
 /* Begin PBXBuildFile section */
 		B03010F220A9372A00A73FAD /* bouncesaverView.h in Headers */ = {isa = PBXBuildFile; fileRef = B03010F120A9372A00A73FAD /* bouncesaverView.h */; };
 		B03010F420A9372A00A73FAD /* bouncesaverView.m in Sources */ = {isa = PBXBuildFile; fileRef = B03010F320A9372A00A73FAD /* bouncesaverView.m */; };
-		B0D8289020A977FE00271B62 /* dvdlogo.png in Resources */ = {isa = PBXBuildFile; fileRef = B0D8288F20A977FE00271B62 /* dvdlogo.png */; };
-		B0EF8CBF20A97B580090B0D8 /* dvdlogo.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = B0D8288F20A977FE00271B62 /* dvdlogo.png */; };
+		BDC1CF1F2F65829500D87FF5 /* dvdvideologo.png in Resources */ = {isa = PBXBuildFile; fileRef = BDC1CF1D2F65826C00D87FF5 /* dvdvideologo.png */; };
+		BDC1CF222F65841400D87FF5 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = BDC1CF212F65841000D87FF5 /* .gitignore */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -20,7 +20,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 7;
 			files = (
-				B0EF8CBF20A97B580090B0D8 /* dvdlogo.png in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -32,6 +31,8 @@
 		B03010F320A9372A00A73FAD /* bouncesaverView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = bouncesaverView.m; sourceTree = "<group>"; };
 		B03010F520A9372A00A73FAD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B0D8288F20A977FE00271B62 /* dvdlogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dvdlogo.png; sourceTree = "<group>"; };
+		BDC1CF1D2F65826C00D87FF5 /* dvdvideologo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dvdvideologo.png; sourceTree = "<group>"; };
+		BDC1CF212F65841000D87FF5 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -49,8 +50,10 @@
 			isa = PBXGroup;
 			children = (
 				B0D8288F20A977FE00271B62 /* dvdlogo.png */,
+				BDC1CF1D2F65826C00D87FF5 /* dvdvideologo.png */,
 				B03010F020A9372A00A73FAD /* bouncesaver */,
 				B03010EF20A9372A00A73FAD /* Products */,
+				BDC1CF212F65841000D87FF5 /* .gitignore */,
 			);
 			sourceTree = "<group>";
 		};
@@ -145,7 +148,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B0D8289020A977FE00271B62 /* dvdlogo.png in Resources */,
+				BDC1CF222F65841400D87FF5 /* .gitignore in Resources */,
+				BDC1CF1F2F65829500D87FF5 /* dvdvideologo.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
